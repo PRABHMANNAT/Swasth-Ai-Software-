@@ -1,0 +1,168 @@
+.about-section {
+  background: #000;
+  padding: 120px 48px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Section Tag */
+.about-tag-wrap {
+  margin-bottom: 32px;
+}
+
+.about-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0FD68C;
+  background: rgba(15, 214, 140, 0.08);
+  border: 1px solid rgba(15, 214, 140, 0.2);
+  border-radius: 6px;
+  padding: 6px 14px;
+}
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+}
+
+/* Headline */
+.about-headline {
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 700;
+  line-height: 1.05;
+  color: #fff;
+  letter-spacing: -0.04em;
+  margin-bottom: 48px;
+}
+
+.text-glow {
+  color: #0FD68C;
+  text-shadow: 0 0 20px rgba(15, 214, 140, 0.3);
+}
+
+/* Description */
+.about-description {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 56px;
+}
+
+.about-description p {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #888;
+  letter-spacing: -0.01em;
+}
+
+.about-description strong {
+  color: #e0e0e0;
+  font-weight: 600;
+}
+
+/* Pillars (Mission/Vision) */
+.about-pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  border-top: 1px solid #1a1a1a;
+  padding-top: 40px;
+}
+
+@media (max-width: 640px) {
+  .about-pillars {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.pillar-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.about-pillar p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #666;
+}
+
+/* Sidebar */
+.about-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  height: 100%;
+}
+
+.about-today-card {
+  background: linear-gradient(145deg, #0d0d0d 0%, #050505 100%);
+  border: 1px solid #1a1a1a;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.sidebar-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.sidebar-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #888;
+  margin-bottom: 24px;
+}
+
+.sidebar-execution-quote {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0FD68C;
+  border-left: 2px solid #0FD68C;
+  padding-left: 16px;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.about-terminal-wrap {
+  flex-grow: 1;
+  display: flex;
+  align-items: stretch;
+}
+
+/* Scrollbar Utility */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
