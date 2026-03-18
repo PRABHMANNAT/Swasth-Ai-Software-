@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 
-// ─── Data: Swasth AI platform features ───────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 const features = [
   {
+    id: "ai-health-score",
     category: "AI DIAGNOSTICS",
     title: "AI Health Score",
     description:
@@ -13,6 +14,7 @@ const features = [
     href: "#health-score",
   },
   {
+    id: "doseguard",
     category: "WEARABLE HARDWARE",
     title: "DoseGuard",
     description:
@@ -23,6 +25,7 @@ const features = [
     href: "#doseguard",
   },
   {
+    id: "ai-doctor",
     category: "MEDICAL LLM",
     title: "AI Doctor",
     description:
@@ -33,6 +36,7 @@ const features = [
     href: "#ai-doctor",
   },
   {
+    id: "medical-repository",
     category: "UNIFIED RECORDS",
     title: "Medical Repository",
     description:
@@ -43,6 +47,7 @@ const features = [
     href: "#repository",
   },
   {
+    id: "family-health",
     category: "FAMILY CARE",
     title: "Family Health Management",
     description:
@@ -53,6 +58,7 @@ const features = [
     href: "#family",
   },
   {
+    id: "research",
     category: "IEEE PUBLISHED",
     title: "Research & Innovation",
     description:
@@ -64,80 +70,118 @@ const features = [
   },
 ]
 
-// ─── Perforated left-edge mask (ring binder effect) ──────────────────────────
-const HOLES = Array.from({ length: 14 }, (_, i) => {
-  const pct = ((i / 13) * 100).toFixed(1)
-  return `radial-gradient(circle at 0% ${pct}%, transparent 5.5px, black 5.5px)`
-}).join(",\n")
-
-const MASK_STYLE: React.CSSProperties = {
-  WebkitMaskImage: HOLES,
-  maskImage: HOLES,
-  WebkitMaskComposite: "source-in",
-  maskComposite: "intersect",
+// ─── Punch-hole card shell ────────────────────────────────────────────────────
+// 14 radial-gradient holes on the left edge, mask-composite:intersect
+function PunchedCard({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="relative overflow-hidden rounded-r-2xl shadow-lg transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-2xl"
+      style={{
+        background: "#0c0c0c",
+        border: "1px solid rgba(255,255,255,0.08)",
+        maskImage: `
+          radial-gradient(circle at 0% 3.7%,  transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 11.1%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 18.5%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 25.9%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 33.3%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 40.7%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 48.1%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 55.6%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 63%,   transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 70.4%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 77.8%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 85.2%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 92.6%, transparent 5.5px, black 5.5px),
+          radial-gradient(circle at 0% 100%,  transparent 5.5px, black 5.5px)
+        `,
+        WebkitMaskComposite: "source-in",
+        maskComposite: "intersect",
+      }}
+    >
+      {/* Top gloss shimmer */}
+      <div
+        className="pointer-events-none absolute inset-x-8 top-0 h-px"
+        style={{
+          background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)",
+        }}
+      />
+      {children}
+    </div>
+  )
 }
 
-// ─── Single card component ────────────────────────────────────────────────────
+// ─── Individual card with its own IntersectionObserver ────────────────────────
 function FeatureCard({
   feature,
   index,
-  isVisible,
 }: {
   feature: (typeof features)[0]
   index: number
-  isVisible: boolean
 }) {
-  const TOP_BASE = 80
-  const TOP_STEP = 24
-  const top = TOP_BASE + index * TOP_STEP
+  const cardRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.2 } // fires when 20% of card is in view
+    )
+    if (cardRef.current) observer.observe(cardRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   return (
+    /*
+     * STICKY WRAPPER
+     * ─────────────
+     * top = 80 + 24×index   →  each card sticks 24 px lower than the previous
+     * zIndex = index + 1     →  newer card always renders on top of the old one
+     * NO overflow:hidden on any ancestor — that breaks position:sticky!
+     */
     <div
+      ref={cardRef}
       className="sticky will-change-transform"
       style={{
-        top,
+        top: `${80 + index * 24}px`,
         zIndex: index + 1,
         transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
     >
+      {/*
+       * ENTRANCE ANIMATION (Tailwind class toggling)
+       * ─────────────────────────────────────────────
+       * Hidden  → opacity-0 translate-y-12 scale-[0.97]
+       * Visible → opacity-100 translate-y-0 scale-100
+       * Duration 700 ms, easing easeOutExpo, staggered 100ms × index
+       */}
       <a
         href={feature.href}
         target={feature.href.startsWith("http") ? "_blank" : undefined}
         rel={feature.href.startsWith("http") ? "noopener noreferrer" : undefined}
-        className="block group"
+        className={`block group transition-all duration-700 ${
+          isVisible
+            ? "opacity-100 translate-y-0 scale-100"
+            : "opacity-0 translate-y-12 scale-[0.97]"
+        }`}
         style={{
-          transition: `opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)`,
-          transitionDelay: `${index * 80}ms`,
-          opacity: isVisible ? 1 : 0,
-          transform: isVisible ? "translateY(0) scale(1)" : "translateY(48px) scale(0.97)",
+          transitionDelay: `${index * 100}ms`,
+          transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       >
-        {/* Card shell with perforated left edge */}
-        <div
-          className="relative overflow-hidden rounded-r-2xl transition-all duration-300 group-hover:scale-[1.015] group-hover:shadow-2xl shadow-lg"
-          style={{
-            background: "#0c0c0c",
-            border: "1px solid rgba(255,255,255,0.08)",
-            ...MASK_STYLE,
-          }}
-        >
-          {/* Top shimmer line */}
-          <div
-            className="pointer-events-none absolute inset-x-8 top-0 h-px"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)",
-            }}
-          />
-
+        {/* Punch-hole card — hover: scale-[1.02] + shadow-2xl via group-hover */}
+        <PunchedCard>
           <div className="flex flex-col md:flex-row">
-            {/* ── Left image panel ── */}
+
+            {/* ── Left: coloured image panel ── */}
             <div
-              className="relative w-full md:w-[42%] aspect-[4/3] md:aspect-auto"
-              style={{
-                backgroundColor: feature.color,
-                minHeight: "clamp(220px, 25vw, 340px)",
-              }}
+              className="relative w-full md:w-[45%] aspect-[4/3] md:aspect-auto md:min-h-[320px]"
+              style={{ backgroundColor: feature.color }}
             >
               <img
                 src={feature.image}
@@ -149,27 +193,18 @@ function FeatureCard({
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
-                  opacity: 0.55,
+                  opacity: 0.8,
                   mixBlendMode: "overlay",
                 }}
               />
 
-              {/* Gradient overlay for text legibility */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(135deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 100%)",
-                }}
-              />
-
-              {/* Centered italic title */}
-              <div className="absolute inset-0 flex items-center justify-center p-6">
+              {/* Italic serif title overlay */}
+              <div className="absolute inset-0 flex items-center justify-center p-4">
                 <h3
-                  className="text-white text-center leading-tight"
+                  className="text-white text-center leading-snug"
                   style={{
                     fontFamily: "'Georgia', 'Times New Roman', serif",
-                    fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
+                    fontSize: "clamp(1.4rem, 3vw, 2.1rem)",
                     fontStyle: "italic",
                     fontWeight: 400,
                     textShadow: "0 2px 16px rgba(0,0,0,0.6)",
@@ -179,25 +214,21 @@ function FeatureCard({
                 </h3>
               </div>
 
-              {/* Right-edge fade to card body */}
+              {/* Right-edge blend into card body */}
               <div
-                className="absolute inset-y-0 right-0 w-16 hidden md:block"
-                style={{
-                  background:
-                    "linear-gradient(to right, transparent, #0c0c0c)",
-                }}
+                className="absolute inset-y-0 right-0 w-14 hidden md:block"
+                style={{ background: "linear-gradient(to right, transparent, #0c0c0c)" }}
               />
             </div>
 
-            {/* ── Right content panel ── */}
-            <div className="flex-1 p-7 md:p-10 flex flex-col justify-center">
-              {/* Category label */}
+            {/* ── Right: content ── */}
+            <div className="flex-1 p-6 md:p-10 flex flex-col justify-center">
               <span
                 className="mb-2 block"
                 style={{
                   fontSize: 10,
                   fontWeight: 600,
-                  letterSpacing: "0.22em",
+                  letterSpacing: "0.2em",
                   textTransform: "uppercase",
                   color: "rgba(255,255,255,0.35)",
                 }}
@@ -205,37 +236,36 @@ function FeatureCard({
                 {feature.category}
               </span>
 
-              {/* Title */}
               <h4
                 className="mb-3"
                 style={{
                   fontFamily: "'Georgia', 'Times New Roman', serif",
-                  fontSize: "clamp(1.1rem, 2vw, 1.45rem)",
+                  fontSize: "clamp(1.1rem, 2vw, 1.5rem)",
                   fontWeight: 400,
                   color: "#fff",
                   letterSpacing: "-0.01em",
                   lineHeight: 1.3,
+                  margin: "0 0 12px",
                 }}
               >
                 {feature.title}
               </h4>
 
-              {/* Description */}
               <p
-                className="mb-5 leading-relaxed"
+                className="mb-4 leading-relaxed"
                 style={{
                   fontSize: "clamp(0.82rem, 1.2vw, 0.9375rem)",
                   color: "rgba(255,255,255,0.5)",
-                  lineHeight: 1.7,
                   maxWidth: 480,
+                  lineHeight: 1.7,
                 }}
               >
                 {feature.description}
               </p>
 
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-5">
-                {feature.tags.map((tag) => (
+              {/* Tag chips */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                {feature.tags.slice(0, 5).map((tag) => (
                   <span
                     key={tag}
                     style={{
@@ -246,7 +276,6 @@ function FeatureCard({
                       background: "rgba(255,255,255,0.06)",
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: 999,
-                      letterSpacing: "0.01em",
                     }}
                   >
                     {tag}
@@ -254,8 +283,12 @@ function FeatureCard({
                 ))}
               </div>
 
-              {/* CTA arrow link */}
-              <div className="mt-auto flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+              {/*
+               * CTA row
+               * gap-2 → gap-3  on group-hover  (Tailwind)
+               * chevron translate-x-1           on group-hover  (Tailwind)
+               */}
+              <div className="mt-auto flex items-center gap-2 group-hover:gap-3 transition-all">
                 <span
                   style={{
                     fontSize: 13.5,
@@ -266,12 +299,12 @@ function FeatureCard({
                   {feature.href.startsWith("http") ? "Read Paper" : "Learn More"}
                 </span>
                 <svg
-                  width="15"
-                  height="15"
+                  width="16"
+                  height="16"
                   viewBox="0 0 16 16"
                   fill="none"
                   className="transition-transform group-hover:translate-x-1"
-                  style={{ color: "rgba(255,255,255,0.5)" }}
+                  style={{ color: "rgba(255,255,255,0.5)", flexShrink: 0 }}
                 >
                   <path
                     d="M6 12L10 8L6 4"
@@ -284,7 +317,7 @@ function FeatureCard({
               </div>
             </div>
           </div>
-        </div>
+        </PunchedCard>
       </a>
     </div>
   )
@@ -292,22 +325,27 @@ function FeatureCard({
 
 // ─── Section ──────────────────────────────────────────────────────────────────
 export function FeaturesShowcase() {
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const [headerVisible, setHeaderVisible] = useState(false)
 
   useEffect(() => {
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setIsVisible(true) },
-      { threshold: 0.06 }
+      ([e]) => { if (e.isIntersecting) { setHeaderVisible(true); obs.disconnect() } },
+      { threshold: 0.2 }
     )
-    if (sectionRef.current) obs.observe(sectionRef.current)
+    if (headerRef.current) obs.observe(headerRef.current)
     return () => obs.disconnect()
   }, [])
 
   return (
+    /*
+     * CRITICAL: Do NOT put overflow:hidden here.
+     * overflow:hidden on any ancestor prevents position:sticky from working.
+     * Ambient orbs are clipped via a separate absolutely-positioned layer
+     * that has its own overflow:hidden so it doesn't affect sticky children.
+     */
     <section
-      ref={sectionRef}
-      className="relative w-full overflow-hidden"
+      className="w-full relative"
       style={{
         background: "linear-gradient(to bottom, #000 0%, #060606 6%, #060606 94%, #000 100%)",
         paddingTop: "clamp(5rem, 8vw, 8rem)",
@@ -316,16 +354,16 @@ export function FeaturesShowcase() {
         paddingRight: "clamp(1.5rem, 4vw, 2.5rem)",
       }}
     >
-      {/* Ambient background orbs */}
-      <div className="pointer-events-none absolute inset-0">
+      {/* Ambient orbs — clipped in their OWN overflow:hidden layer */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ overflow: "hidden", zIndex: 0 }}
+      >
         <div
           className="absolute rounded-full"
           style={{
-            top: "5%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: 600,
-            height: 600,
+            top: "5%", left: "50%", transform: "translateX(-50%)",
+            width: 600, height: 600,
             background: "radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 65%)",
             filter: "blur(4px)",
           }}
@@ -333,24 +371,22 @@ export function FeaturesShowcase() {
         <div
           className="absolute rounded-full"
           style={{
-            bottom: "10%",
-            right: "5%",
-            width: 400,
-            height: 400,
+            bottom: "10%", right: "5%",
+            width: 400, height: 400,
             background: "radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 65%)",
           }}
         />
       </div>
 
-      <div className="relative mx-auto" style={{ maxWidth: 1200 }}>
-        {/* ── Header ── */}
+      <div className="relative mx-auto" style={{ maxWidth: 1200, zIndex: 1 }}>
+
+        {/* ── Section header ── */}
         <div
-          className="text-center mb-16"
-          style={{
-            transition: "opacity 1s ease, transform 1s ease",
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? "translateY(0)" : "translateY(28px)",
-          }}
+          ref={headerRef}
+          className={`text-center mb-16 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+          style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {/* Badge */}
           <div
@@ -365,16 +401,14 @@ export function FeaturesShowcase() {
             <span
               className="mr-2 inline-block rounded-full"
               style={{
-                width: 7,
-                height: 7,
+                width: 7, height: 7,
                 background: "#fff",
                 boxShadow: "0 0 10px rgba(255,255,255,0.8)",
               }}
             />
             <span
               style={{
-                fontSize: 11,
-                fontWeight: 600,
+                fontSize: 11, fontWeight: 600,
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",
                 color: "rgba(255,255,255,0.65)",
@@ -421,27 +455,24 @@ export function FeaturesShowcase() {
           </p>
         </div>
 
-        {/* ── Sticky stacked cards ── */}
-        <div className="flex flex-col gap-5">
-          {features.map((feature, i) => (
-            <FeatureCard
-              key={feature.title}
-              feature={feature}
-              index={i}
-              isVisible={isVisible}
-            />
+        {/*
+         * CARD STACK CONTAINER
+         * ─────────────────────
+         * gap-6 md:gap-8 between sticky wrappers creates the spacing that lets
+         * each card's min-height fill enough scroll room for the sticky to work.
+         * The sticky + zIndex + top formula creates the deck-of-cards overlap.
+         */}
+        <div
+          className="flex flex-col gap-6 md:gap-8"
+          style={{ scrollBehavior: "smooth" }}
+        >
+          {features.map((feature, index) => (
+            <FeatureCard key={feature.id} feature={feature} index={index} />
           ))}
         </div>
 
         {/* ── Bottom CTA ── */}
-        <div
-          className="mt-16 text-center"
-          style={{
-            transition: "opacity 1s ease 600ms, transform 1s ease 600ms",
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? "translateY(0)" : "translateY(24px)",
-          }}
-        >
+        <div className="mt-16 text-center">
           <a
             href="#faq"
             className="inline-flex items-center gap-2 rounded-full transition-all duration-200 hover:scale-[1.03]"
@@ -452,8 +483,8 @@ export function FeaturesShowcase() {
               fontSize: 14,
               fontWeight: 600,
               letterSpacing: "-0.01em",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)",
               textDecoration: "none",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)",
             }}
             onMouseEnter={(e) =>
               ((e.currentTarget as HTMLAnchorElement).style.boxShadow =
@@ -466,13 +497,8 @@ export function FeaturesShowcase() {
           >
             Explore all features
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M6 12L10 8L6 4"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="1.5"
+                strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
         </div>
