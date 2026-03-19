@@ -4,7 +4,7 @@
 .fs-section {
   position: relative;
   background: #000000;
-  padding: 120px 48px;
+  padding: clamp(80px, 10vw, 120px) clamp(20px, 4vw, 48px);
   overflow: hidden;
   font-family: 'DM Sans', sans-serif;
 }
@@ -92,19 +92,16 @@
 /* ── Grid ───────────────────────────────────────────────────────── */
 .fs-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 360px));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 40px;
-  justify-content: center;
   width: 100%;
+  max-width: 860px;
 }
 
 @media (max-width: 768px) {
-  .fs-section {
-    padding: 80px 20px;
-  }
   .fs-grid {
-    grid-template-columns: minmax(0, 360px);
-    gap: 40px;
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 }
 

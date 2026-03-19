@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { cn } from "../../lib/utils";
 
 interface TerminalProps {
@@ -71,7 +71,7 @@ export const Terminal = ({
 
     const timer = setTimeout(typeChar, 500);
     return () => clearTimeout(timer);
-  }, [currentCommandIndex, commands, outputs, typingSpeed, delayBetweenCommands]);
+  }, [currentCommandIndex, commands, outputs, typingSpeed, delayBetweenCommands, onComplete]);
 
   useEffect(() => {
     if (containerRef.current) {

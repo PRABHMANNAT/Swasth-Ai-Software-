@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -8,8 +12,15 @@ body {
   margin: 0;
   background: #000;
   color: #fff;
+  overflow-x: hidden;
 }
 
 #root {
   min-height: 100vh;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
 }

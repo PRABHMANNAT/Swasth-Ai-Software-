@@ -1,60 +1,58 @@
-import { Terminal } from './ui/terminal';
-import './AboutSection.css';
+import { Terminal } from "./ui/terminal";
+import "./AboutSection.css";
 
-const AboutSection = () => {
-  const executionCommands = [
-    "git checkout production",
-    "analyze --vitals --india-records",
-    "deploy --doseguard-v1 --wearable-patch",
-    "publish --ieee-scopus --accuracy-90plus",
-    "status Swasth AI",
-  ];
+const executionCommands = [
+  "bootstrap --records --history",
+  "train --health-score --80-parameters",
+  "sync --doseguard --closed-loop",
+  "publish --ieee --patent-pending",
+  "status --swasth-ai",
+];
 
-  const executionOutputs: Record<number, string[]> = {
-    0: ["Switched to branch 'production'"],
-    1: ["✔ Connected to 1.4B records.", "✔ Processing clinical data.", "✔ Model fusion: CNN + LSTM + Transformer."],
-    2: ["✔ Hardware sync: 3D printed.", "✔ Micro-pump verified.", "✔ Sensor tested.", "✔ DoseGuard Active."],
-    3: ["✔ IEEE Published.", "✔ Scopus Indexed.", "✔ Patent Filed.", "✔ Partnership: PharmEasy."],
-    4: ["✔ Live features: 32+", "✔ Users satisfied.", "✔ Relentless execution."],
-  };
+const executionOutputs: Record<number, string[]> = {
+  0: ["Connected patient history layer.", "Records index ready."],
+  1: ["Health Score pipeline active.", "80+ biomarkers mapped."],
+  2: ["DoseGuard sensors live.", "Micro-dose safety envelope verified."],
+  3: ["IEEE paper published.", "Commercial patent filed.", "Partnership stack expanding."],
+  4: ["32+ tools live.", "Platform ready for scale."],
+};
 
+export default function AboutSection() {
   return (
     <section className="about-section" id="about">
       <div className="about-container">
-        {/* About Info Label/Tag */}
         <div className="about-tag-wrap">
           <span className="about-tag">About Swasth AI</span>
         </div>
 
         <div className="about-layout">
-          {/* Main Content Side */}
           <div className="about-content">
             <h2 className="about-headline">
-              We don’t build health apps. We build the <span className="text-glow">infrastructure</span> for intelligent healthcare.
+              Built by builders. For a <span className="text-glow">healthier India.</span>
             </h2>
-            
+
             <div className="about-description">
               <p>
-                India’s healthcare system does not fail because medicine is ineffective. It fails because the system is fragmented. 
-                Medical records are scattered across hospitals and clinics, prescriptions are often based on brief, one-time consultations, 
-                and early warning signs from the body go unnoticed until intervention becomes urgent.
+                Swasth AI is a health-tech startup on a mission to unify
+                India&apos;s fragmented healthcare system through AI-powered
+                diagnostics, intelligent health scoring, and closed-loop wearable
+                drug delivery.
               </p>
               <p>
-                <strong>Swasth AI is built to change that.</strong>
+                We are not building another health app. We are building the
+                infrastructure layer that connects patients, doctors, records,
+                and medicine into one seamless system.
               </p>
               <p>
-                We are creating a unified intelligence layer for healthcare — one that brings together fragmented records, real-time vitals, 
-                medication delivery, and clinical decision-making into a seamless, closed-loop system.
+                Founded out of Chandigarh University&apos;s Technology Business
+                Incubator, Swasth AI has grown from a student project into a
+                patent-pending, IEEE-published, partner-backed healthcare
+                platform with 32+ live features and a working hardware
+                prototype.
               </p>
               <p>
-                Our platform combines a full-stack digital health ecosystem with breakthrough biomedical innovation. On one side, 
-                we offer a comprehensive health management app with 32+ live features, including AI-driven health scoring based on 
-                80+ blood parameters, an AI doctor, and family health management. On the other, we are building <strong>DoseGuard</strong> — 
-                a wearable micro-dosing patch designed to read the body’s signals and deliver medication only when it is needed.
-              </p>
-              <p>
-                This is not a marginal improvement to existing healthcare. It is a fundamental shift — from reactive treatment to proactive, 
-                body-responsive care.
+                We operate at the intersection of AI, biomedical engineering,
+                and consumer health - and we are just getting started.
               </p>
             </div>
 
@@ -62,40 +60,43 @@ const AboutSection = () => {
               <div className="about-pillar">
                 <h3 className="pillar-title">Mission</h3>
                 <p>
-                  To make personalized, intelligence-driven healthcare accessible to every Indian — from South Mumbai to rural Punjab. 
-                  We aim to replace guesswork with data and fragmented records with a single, intelligent source of truth.
+                  To make personalized, data-driven healthcare accessible to
+                  every Indian - from metro cities to rural villages - by
+                  replacing guesswork with intelligence.
                 </p>
               </div>
               <div className="about-pillar">
                 <h3 className="pillar-title">Vision</h3>
                 <p>
-                  A future where your body’s real-time signals shape your treatment, and where no chronic patient is ever left 
-                  taking the wrong dose at the wrong time without support or oversight.
+                  A world where your body&apos;s real-time signals drive your
+                  treatment, your complete medical history follows you
+                  everywhere, and no chronic patient ever takes the wrong dose
+                  again.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Execution/Terminal Side */}
           <div className="about-sidebar">
             <div className="about-today-card">
-              <h3 className="sidebar-title">Where We Are Today</h3>
+              <h3 className="sidebar-title">Organization Snapshot</h3>
               <p className="sidebar-text">
-                Incubated at Chandigarh University’s TBI and backed by USyd’s INCUBATE accelerator. 
-                Our research is published in IEEE, patent filed, and hardware prototype verified. 
-                App already used by real users every day.
+                Incubated at Chandigarh University TBI, backed by research,
+                strengthened by real hardware, and focused on one clear goal:
+                replacing fragmented healthcare journeys with one intelligent
+                care loop.
               </p>
               <p className="sidebar-execution-quote">
-                Two co-founders. Zero noise. Relentless execution.
+                Build fast. Ship faster. Let the product speak.
               </p>
             </div>
 
             <div className="about-terminal-wrap">
-              <Terminal 
-                commands={executionCommands} 
-                outputs={executionOutputs} 
-                delayBetweenCommands={800}
-                typingSpeed={35}
+              <Terminal
+                commands={executionCommands}
+                outputs={executionOutputs}
+                delayBetweenCommands={900}
+                typingSpeed={28}
               />
             </div>
           </div>
@@ -103,6 +104,4 @@ const AboutSection = () => {
       </div>
     </section>
   );
-};
-
-export default AboutSection;
+}

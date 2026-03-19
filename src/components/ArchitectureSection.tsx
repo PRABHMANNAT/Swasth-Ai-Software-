@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useScroll, useTransform } from "framer-motion";
+import { useScroll, useTransform } from "motion/react";
 import { GoogleGeminiEffect } from "./ui/google-gemini-effect";
 import "./ArchitectureSection.css";
 
@@ -8,19 +8,22 @@ const tiers = [
     num: 1,
     title: "Edge Devices",
     chips: ["ESP32", "BLE 5.2", "Bio-sensors", "Micro-pump", "Smart Dispenser"],
-    desc: "DoseGuard wearable with real-time sensing (SpO₂, HR, Temp, Accelerometer) and micro-pump actuator. Smart Dispenser with medication reservoir and dispensing log.",
+    desc:
+      "DoseGuard wearable for real-time sensing, micro-dosing actuation, and smart dispensing with a medication reservoir and dose log.",
   },
   {
     num: 2,
     title: "Cloud Analytics & Core Services",
     chips: ["HL7/FHIR", "MQTT", "DNNs", "Random Forests", "InfluxDB"],
-    desc: "Data ingestion via HL7/FHIR APIs and MQTT. Multimodal feature extraction. ML models for anomaly detection. Health Score engine (80+ parameters). Real-time processing with dose optimization feedback loop.",
+    desc:
+      "Data ingestion, multimodal feature extraction, anomaly detection, Health Score inference across 80+ parameters, and dose optimization with feedback loops.",
   },
   {
     num: 3,
     title: "End-User Applications",
     chips: ["Patient App", "Family Management", "Clinical Portal", "Decision Support"],
-    desc: "Patient & Family App — Health Score dashboard, adherence tracking, family account management. Clinical Provider Portal — longitudinal views, alert management, and configuration updates.",
+    desc:
+      "Patient and family dashboards for adherence and health scoring, plus a clinical provider portal for longitudinal views, alerts, and configuration updates.",
   },
 ];
 
@@ -32,7 +35,7 @@ const securityItems = [
   "Secure Data Lake",
 ];
 
-const ArchitectureSection = () => {
+export default function ArchitectureSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -48,7 +51,6 @@ const ArchitectureSection = () => {
 
   return (
     <section className="arch-section" id="architecture">
-      {/* Gemini scroll container — tall div that drives the animation */}
       <div
         ref={scrollRef}
         style={{
@@ -61,31 +63,25 @@ const ArchitectureSection = () => {
         <GoogleGeminiEffect
           pathLengths={[p1, p2, p3, p4, p5]}
           title="Enterprise-grade infrastructure."
-          description="Scroll to reveal the system architecture →"
+          description="Architecture overview"
         />
       </div>
 
-      {/* Architecture content — below the animation */}
       <div className="arch-content-below">
         <div className="arch-container">
-          {/* Tag */}
           <span className="arch-tag">Architecture</span>
 
-          {/* Headline */}
           <h2 className="arch-headline">
-            Three tiers.{" "}
-            <span className="arch-headline-accent">Built for scale.</span>
+            Three tiers. <span className="arch-headline-accent">Built for scale.</span>
           </h2>
 
-          {/* Overview */}
           <p className="arch-overview">
-            Swasth AI operates across three tiers — edge devices for real-time
+            Swasth AI operates across three tiers - edge devices for real-time
             sensing, a cloud analytics layer for AI-driven health scoring and
             dose optimization, and end-user applications for patients, families,
             and clinicians.
           </p>
 
-          {/* Tier cards */}
           <div className="arch-tiers">
             {tiers.map((tier) => (
               <div key={tier.num} className="arch-tier-card">
@@ -99,14 +95,15 @@ const ArchitectureSection = () => {
                 <p className="arch-tier-desc">{tier.desc}</p>
                 <div className="arch-chips">
                   {tier.chips.map((chip) => (
-                    <span key={chip} className="arch-chip">{chip}</span>
+                    <span key={chip} className="arch-chip">
+                      {chip}
+                    </span>
                   ))}
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Security & Compliance bar */}
           <div className="arch-security-bar">
             {securityItems.map((item) => (
               <div key={item} className="arch-security-item">
@@ -119,6 +116,4 @@ const ArchitectureSection = () => {
       </div>
     </section>
   );
-};
-
-export default ArchitectureSection;
+}

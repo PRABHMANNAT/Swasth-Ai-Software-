@@ -345,6 +345,7 @@ export function FeaturesShowcase() {
      * that has its own overflow:hidden so it doesn't affect sticky children.
      */
     <section
+      id="features"
       className="w-full relative"
       style={{
         background: "linear-gradient(to bottom, #000 0%, #060606 6%, #060606 94%, #000 100%)",

@@ -1,4 +1,4 @@
-import { motion, type MotionValue } from "framer-motion";
+import { motion, type MotionValue } from "motion/react";
 
 interface GoogleGeminiEffectProps {
   pathLengths: MotionValue<number>[];

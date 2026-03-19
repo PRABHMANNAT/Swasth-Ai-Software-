@@ -10,7 +10,7 @@ const FeatureDetail = ({
   imgSrc: string;
   imgAlt: string;
 }) => (
-  <div className="bg-[#F5F5F7] dark:bg-neutral-800 p-8 md:p-14 rounded-3xl mb-4">
+  <div className="mb-4 rounded-3xl bg-[#F5F5F7] p-6 dark:bg-neutral-800 sm:p-8 md:p-14">
     <p className="text-neutral-600 dark:text-neutral-400 text-base md:text-2xl font-sans max-w-3xl mx-auto">
       {description}
     </p>
@@ -93,11 +93,11 @@ export default function AppShowcaseSection() {
   return (
     <section className="w-full bg-black py-20">
       {/* Section header */}
-      <div className="max-w-7xl mx-auto px-6 mb-4">
+      <div className="mx-auto mb-4 max-w-7xl px-4 sm:px-6">
         <p className="text-sm font-semibold tracking-widest uppercase text-white/40 mb-3">
           The App
         </p>
-        <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight max-w-2xl">
+        <h2 className="max-w-2xl text-3xl font-bold leading-tight text-white md:text-5xl">
           Everything your health needs,{" "}
           <span
             style={{
@@ -110,7 +110,7 @@ export default function AppShowcaseSection() {
             in one place.
           </span>
         </h2>
-        <p className="mt-4 text-white/50 text-base md:text-lg max-w-xl">
+        <p className="mt-4 max-w-xl text-base text-white/50 md:text-lg">
           A peek inside Swasth AI — built for real patients and real doctors across India.
         </p>
       </div>
