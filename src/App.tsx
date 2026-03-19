@@ -3,7 +3,7 @@ import { FeaturesShowcase } from './components/FeaturesShowcase'
 import AppShowcaseSection from './components/AppShowcaseSection'
 import AboutSection from './components/AboutSection'
 import ResearchSection from './components/ResearchSection'
-import ArchitectureSection from './components/ArchitectureSection'
+import SystemFlowSection from './components/SystemFlowSection'
 import PricingSection from './components/PricingSection'
 import TestimonialsSection from './components/TestimonialsSection'
 import FoundersSection from './components/FoundersSection'
@@ -19,7 +19,7 @@ function App() {
       <AppShowcaseSection />
       <AboutSection />
       <ResearchSection />
-      <ArchitectureSection />
+      <SystemFlowSection />
       <PricingSection />
       <TestimonialsSection />
       <FoundersSection />
